@@ -133,7 +133,7 @@ elseif ($packageInSite.CanUpgrade -eq $true) {
 In case you are not using the elements.xml file for deployment, you may add the custom action using `Add-PnPCustomAction`
 
 ```powershell
-Add-PnPCustomAction -Title "Panel" -Name "panel" -Location "ClientSideExtension.ListViewCommandSet.CommandBar" -ClientSideComponentId "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" -ClientSideComponentProperties "{""listName"":""Travel Requests"",""logLevel"":""3"",""appInsightsConnString"":""your-connection-string""}" -RegistrationId 100 -RegistrationType List -Scope Web
+Add-PnPCustomAction -Title "Panel" -Name "panel" -Location "ClientSideExtension.ListViewCommandSet.CommandBar" -ClientSideComponentId "03a2395f-4448-4d30-a540-6b22c79c255a" -ClientSideComponentProperties "{""listName"":"""",""logLevel"":""3"",""appInsightsConnString"":""""}" -RegistrationId 101 -RegistrationType List -Scope Web
 ```
 
 Updating the properties in an already deployed solution can be done with:

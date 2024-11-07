@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
     <ClientSideComponentInstance
-        Title="Panel"
+        Title="CopyPageToAnotherSite"
         Location="ClientSideExtension.ListViewCommandSet.CommandBar"
-        ListTemplateId="100"
-        Properties="{&quot;listName&quot;:&quot;Travel Requests&quot;,&quot;logLevel&quot;:&quot;3&quot;,&quot;appInsightsConnString&quot;:&quot;your-connection-string&quot;}"
+        ListTemplateId="119"
+        Properties=""
         ComponentId="03a2395f-4448-4d30-a540-6b22c79c255a" />
 </Elements>

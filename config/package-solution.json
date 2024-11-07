@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "SPFx Panel for Travel Requests",
+    "name": "Borregaard application for copying pages between sites",
     "id": "f9f3dfc5-a3e5-421b-8a03-1a631efd2897",
-    "version": "1.1.0.0",
+    "version": "1.4.1.0",
     "includeClientSideAssets": true,
     "isDomainIsolated": false,
     "developer": {
-      "name": "Kinga Kazala",
+      "name": "Kjetil Hovding",
       "websiteUrl": "",
       "privacyUrl": "",
       "termsOfUseUrl": "",
@@ -15,10 +15,10 @@
     },
     "features": [
       {
-        "title": "Application Extension - Deployment of custom action for Travel Requests.",
-        "description": "Deploys a custom action, which provides a Panel ",
+        "title": "Application Extension - Deployment of custom action for copy page.",
+        "description": "Deploys a custom action with the possibility to copy a page between sites.",
         "id": "fbfc8ff7-864b-4787-b520-3564303eca03",
-        "version": "1.0.0.0",
+        "version": "1.1.0.0",
         "assets": {
           "elementManifests": [
             "elements.xml",
@@ -29,6 +29,6 @@
     ]
   },
   "paths": {
-    "zippedPackage": "solution/spfx-panel.sppkg"
+    "zippedPackage": "solution/copypage.sppkg"
   }
 }

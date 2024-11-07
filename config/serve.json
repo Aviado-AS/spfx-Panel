@@ -1,6 +1,33 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/core-build/serve.schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/spfx-serve.schema.json",
   "port": 4321,
   "https": true,
-  "initialPage": "https://enter-your-SharePoint-site/_layouts/workbench.aspx"
+  "serveConfigurations": {
+    "default": {
+      "pageUrl": "https://borregaard.sharepoint.com/sites/Portal-DS/SitePages/Forms/allpages.aspx",
+      "customActions": {
+        "03a2395f-4448-4d30-a540-6b22c79c255a": {
+          "location": "ClientSideExtension.ListViewCommandSet.CommandBar",
+          "properties": {
+            "listName": "SitePages",
+            "logLevel": "3",
+            "appInsightsConnString": ""
+          }
+        }
+      }
+    },
+    "copyAndTranslatePage": {
+      "pageUrl": "https://borregaard.sharepoint.com/sites/Portal-DS/SitePages/Forms/allpages.aspx",
+      "customActions": {
+        "03a2395f-4448-4d30-a540-6b22c79c255a": {
+          "location": "ClientSideExtension.ListViewCommandSet.CommandBar",
+          "properties": {
+            "listName": "SitePages",
+            "logLevel": "3",
+            "appInsightsConnString": ""
+          }
+        }
+      }
+    }
+  }
 }

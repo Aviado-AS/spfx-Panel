@@ -8,10 +8,8 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { AppInsights } from "../utils/AppInsights";
 import { AppInsightsLogListener } from "../utils/AppInsightsLogListener";
-import { IMyComponentProps } from "./components/MyComponent/IMyComponentProps";
-import MyComponent from "./components/MyComponent/MyComponent";
-import { IStatefulPanelProps } from "./components/StatefulPanel/IStatefulPanelProps";
-import StatefulPanel from "./components/StatefulPanel/StatefulPanel";
+import { ICopyPageCompProps } from "./components/CopyPageComp/ICopyPageCompProps";
+import CopyPageComp from "./components/CopyPageComp/CopyPageComp";
 
 export interface IPanelCommandSetProperties {
 	logLevel?: number;
@@ -39,7 +37,7 @@ export default class PanelCommandSet extends BaseListViewCommandSet<IPanelComman
 	@override
 	public onInit(): Promise<void> {
 		//list name registered in Extension properties
-		const _isListRegistered = this.context.listView.list.title === this.properties.listName ? true : false;
+		const _isListRegistered = this.context.listView.list.serverRelativeUrl.indexOf("/SitePages") > -1 ? true : false;
 
 		const _setLogger = (appInsights?: AnalyticsPlugin): void => {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -66,20 +64,10 @@ export default class PanelCommandSet extends BaseListViewCommandSet<IPanelComman
 				command.title = config.title;
 			};
 
-			//Command 1 always visible and enabled in 'Travel Requests' list
-			const compareOneCommand: Command = this.tryGetCommand("COMMAND_1");
-			if (compareOneCommand) {
-				_setCommandState(compareOneCommand, {
-					title: strings.Command1,
-					visible: true,
-					disabled: false,
-				});
-			}
-			//Command 2 always visible in 'Travel Requests' list, enabled if selectedItem
-			const compareTwoCommand: Command = this.tryGetCommand("COMMAND_2");
+			const compareTwoCommand: Command = this.tryGetCommand("COMMAND_1");
 			if (compareTwoCommand) {
 				_setCommandState(compareTwoCommand, {
-					title: strings.Command2,
+					title: "Copy page to another site",
 					visible: true,
 					disabled: true,
 				});
@@ -102,12 +90,6 @@ export default class PanelCommandSet extends BaseListViewCommandSet<IPanelComman
 
 		_setPanel();
 		_setCommands();
-
-		//#region IMPORTANT!
-		// To avoid timeout after 30 minutes: "The security validation for this page is invalid and might be corrupted
-		// This issue only occurs when the spfi() object and spfx behavior is instantiated multiple times during the lifecycle of a web part.
-		// See: https://github.com/pnp/pnpjs/issues/2304
-		//#endregion
 		this.spfiContext = spfi().using(SPFx(this.context));
 		this.context.listView.listViewStateChangedEvent.add(this, this._onListViewStateChanged);
 
@@ -118,7 +100,7 @@ export default class PanelCommandSet extends BaseListViewCommandSet<IPanelComman
 	public _onListViewStateChanged(args: ListViewStateChangedEventArgs): void {
 		const itemSelected = this.context.listView.selectedRows && this.context.listView.selectedRows.length === 1;
 
-		const compareTwoCommand: Command = this.tryGetCommand("COMMAND_2");
+		const compareTwoCommand: Command = this.tryGetCommand("COMMAND_1");
 		if (compareTwoCommand && compareTwoCommand.disabled === itemSelected) {
 			compareTwoCommand.disabled = !itemSelected;
 			this.raiseOnChange();
@@ -132,43 +114,19 @@ export default class PanelCommandSet extends BaseListViewCommandSet<IPanelComman
 
 	@override
 	public onExecute(event: IListViewCommandSetExecuteEventParameters): void {
-		const _showComponent = (props: IMyComponentProps): void => {
+		const _showComponent = (props: ICopyPageCompProps): void => {
 			//#region comments
-			//using item's ID as a key will ensure the form is re-rendered when selection is changed
-			//BUT if Panel for the Item has been opened (rendered), and
-			//   - panel is closed
-			//   - sb changed item properties (another browser)
-			//   - wait for list to refresh and show the new property
-			//   - open Panel: old value becasue panel is not re-rendered
-			// const ChangeToken = props.selectedRows[0].getValueByName("ID");
-			//#endregion
-
 			this.compId = Date.now().toString();
 			this.panelPlaceHolder.setAttribute("id", this.compId);
-			const element: React.ReactElement<IMyComponentProps> = React.createElement(MyComponent, {
+			const element: React.ReactElement<ICopyPageCompProps> = React.createElement(CopyPageComp, {
 				...props,
 				key: this.compId,
 			});
 
 			ReactDOM.render(element, this.panelPlaceHolder);
 		};
-		const _showPanel = (props: IStatefulPanelProps): void => {
-			this.panelId = Date.now().toString();
-			this.panelPlaceHolder.setAttribute("id", this.panelId);
 
-			const element: React.ReactElement<IStatefulPanelProps> = React.createElement(
-				StatefulPanel,
-				{
-					...props,
-					key: this.panelId,
-				},
-				React.createElement("div", {
-					dangerouslySetInnerHTML: { __html: strings.htmlInfo },
-				})
-			);
 
-			ReactDOM.render(element, this.panelPlaceHolder);
-		};
 
 		const _dismissPanel = (): void => {
 			Logger.write(strings.lblRefreshing);
@@ -184,21 +142,17 @@ export default class PanelCommandSet extends BaseListViewCommandSet<IPanelComman
 
 		switch (event.itemId) {
 			case "COMMAND_1":
-				_showPanel({
-					title: strings.titleTravelGuidelines,
-					panelTop: this.panelTop,
-				});
-				break;
-			case "COMMAND_2":
 				_showComponent({
 					panelConfig: {
 						panelTop: this.panelTop,
-						title: strings.titleTravelReport,
+						title: "COPY THIS PAGE TO ANOTHER SITE",
 						onDismiss: _dismissPanel,
 					},
 					spfiContext: this.spfiContext,
 					listName: this.context.listView.list.title,
+					listId: this.context.listView.list.guid.toString(),
 					selectedRows: event.selectedRows,
+					context: this.context,
 					onCompleted: _onCompleted,
 				});
 				break;
